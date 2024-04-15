@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode | RFID Smart Trolley</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+
+    <nav class="bg-blue-500 py-0">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold mb-8 px-2 py-2 flex items-center">
+                RFID Enabled Smart Trolley
+                <img src="./views/Shopcart.png" alt="Description of your image" class="ml-2" width="50" height="50">
+            </h1>
+            <!-- Home tab -->
+            <a href="Home.html" class="text-white text-lg font-bold hover:underline">Home</a>
+            <!-- Barcode tab -->
+            <a href="Barcode.html" class="text-white text-lg font-bold hover:underline">QR-Code</a>
+            <!-- Scanner tab -->
+            <a href="Scanner.html" class="text-white text-lg font-bold hover:underline">Pay</a>
+            <a href="Setting.html" class="focus:outline-none px-10">
+                <img src=".\views\settingicon.png" alt="Setting" class="w-10 h-10">
+            </a>
+        </div> 
+    </nav>
+
+    <!-- Content below Navbar -->
+    <div class="container mx-auto mt-8">
+        <div class="max-w-md mx-auto bg-white p-8 rounded shadow-md">
+            <h1 class="text-2xl font-bold mb-4 text-center">Payment Pathway</h1>
+
+            <!-- Input fields -->
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 font-semibold">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email"
+                    class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+            </div>
+
+            <div class="mb-4">
+                <label for="date" class="block text-gray-700 font-semibold">Date</label>
+                <input type="date" id="date" name="date" class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+            </div>
+
+            <!-- Fetch data button -->
+            <button id="fetchDataBtn"
+                class="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue mb-4">Fetch
+                Data</button>
+
+            <!-- Container to display fetched data -->
+            <div id="dataContainer" class="hidden">
+                <!-- Fetched data will be displayed here -->
+            </div>
+
+            <!-- Payment buttons -->
+            <div class="flex justify-between">
+                <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:shadow-outline-green">Pay from Gpay</button>
+                <button class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 focus:outline-none focus:shadow-outline-yellow">Pay from PhonePe</button>
+                <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue">Pay from PayPal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('fetchDataBtn').addEventListener('click', () => {
+            // Fetch data logic here
+            // You can use JavaScript fetch API or any other method to fetch data from MongoDB
+            // Once data is fetched, update the data container with the fetched data
+            const email = document.getElementById('email').value;
+            const date = document.getElementById('date').value;
+            
+            // Example: Fetch data using fetch API
+            fetch('/fetch-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, date })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display fetched data in the data container
+                const dataContainer = document.getElementById('dataContainer');
+                dataContainer.innerHTML = `<p class="font-semibold">Fetched Data:</p><p>${JSON.stringify(data)}</p>`;
+                dataContainer.classList.remove('hidden');
+            })
+            .catch(error => console.error('Error fetching data:', error));
+        });
+    </script>
+
+    
+
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode | RFID Smart Trolley</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <nav class="bg-blue-500 py-0">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold mb-8 px-2 py-2 flex items-center">
+                RFID Enabled Smart Trolley
+                <img src="./views/Shopcart.png" alt="Description of your image" class="ml-2" width="50" height="50">
+            </h1>
+            <!-- Home tab -->
+            <a href="Home.html" class="text-white text-lg font-bold hover:underline">Home</a>
+            <!-- Barcode tab -->
+            <a href="Barcode.html" class="text-white text-lg font-bold hover:underline">QR-Code</a>
+            <!-- Scanner tab -->
+            <a href="Scanner.html" class="text-white text-lg font-bold hover:underline">Pay</a>
+            <a href="Setting.html" class="focus:outline-none px-10">
+                <img src=".\views\settingicon.png" alt="Setting" class="w-10 h-10">
+            </a>
+        </div> 
+    </nav>
+
+
+    <!-- Content below Navbar -->
+    <div class="container mx-auto mt-8">
+        <div class="max-w-md mx-auto bg-white p-8 rounded shadow-md">
+            <!-- Display barcode and associated text -->
+            <div class="text-center">
+                <img src="./views/Qrcode.png" alt="Barcode" class="mx-auto mb-4">
+                <p class="text-lg font-semibold mb-4">You can take screenshot and Scan & Pay</p>
+                <!-- Button for direct payment -->
+                <a href="Scanner.html" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue">You can click here to pay directly</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
