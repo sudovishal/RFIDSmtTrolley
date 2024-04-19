@@ -9,16 +9,21 @@
 </head>
 
 <body class="bg-gray-100">
-
     <div class="container mx-auto flex justify-center items-center h-screen">
-
         <div class="bg-white p-8 rounded shadow-md max-w-md text-center">
-            <p class="text-lg font-semibold mb-4 text-center">Trolley with id 1200_45 is assigned</p>
-            <button onclick="window.location.href='Home.html'" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue text-center">OK</button>
+            <!-- Display the assigned trolley ID using inline JavaScript -->
+            <p class="text-lg font-semibold mb-4 text-center">Trolley with id <span id="trolleyIdPlaceholder"></span> is assigned</p>
+            <a href="Home.html" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue text-center">OK</a>
         </div>
-
     </div>
 
+    <!-- Inline script to set the trolley ID value -->
+    <script>
+        // Get the placeholder element
+        const trolleyIdPlaceholder = document.getElementById('trolleyIdPlaceholder');
+        // Set the trolley ID value
+        trolleyIdPlaceholder.textContent = '${randomTrolleyId}';
+    </script>
 </body>
 
 </html>
