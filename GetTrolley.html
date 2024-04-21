@@ -26,12 +26,45 @@
                         class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
                 </div>
 
-                <a href="AssignTrolley.html"
+                <a href="/products"
                 class="block w-full bg-blue-500 text-white px-4 py-2 rounded-md text-center hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue mt-4">Get
                 my trolley</a>
             </form>
         </div>
     </div>
 </body>
+<script>
+    const form = document.querySelector('form');
+    
+    form.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent default form submission
+    
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+    
+      // Send AJAX request to / route with name and email data
+      fetch('/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email }) // Send data as JSON
+      })
+      .then(response => response.json()) // Parse JSON response (if any)
+      .then(data => {
+        // Handle successful response (e.g., redirect to /products)
+        if (data.message === 'Session started successfully') {
+          window.location.href = '/products'; // Redirect to products page
+        } else {
+          console.error('Error starting session:', data);
+          // Handle errors (e.g., display error message)
+        }
+      })
+      .catch(error => {
+        console.error('Error sending request:', error);
+        // Handle errors (e.g., display error message)
+      });
+    });
+    </script>
 
 </html>

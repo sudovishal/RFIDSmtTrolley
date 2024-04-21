@@ -12,17 +12,45 @@
     <div class="container mx-auto flex justify-center items-center h-screen">
         <div class="bg-white p-8 rounded shadow-md max-w-md text-center">
             <!-- Display the assigned trolley ID using inline JavaScript -->
-            <p class="text-lg font-semibold mb-4 text-center">Trolley with id <span id="trolleyIdPlaceholder"></span> is assigned</p>
+            <p class="text-lg font-semibold mb-4 text-center">Trolley with id <span id="trolleyId"></span> is assigned to <span id="name"</p>
             <a href="Home.html" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue text-center">OK</a>
         </div>
     </div>
 
     <!-- Inline script to set the trolley ID value -->
     <script>
-        // Get the placeholder element
-        const trolleyIdPlaceholder = document.getElementById('trolleyIdPlaceholder');
-        // Set the trolley ID value
-        trolleyIdPlaceholder.textContent = '${randomTrolleyId}';
+        const form = document.getElementById('form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = form.elements['name'].value
+            const email = form.elements['email'].value
+
+            const response = await fetch('/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name,
+      email 
+    })
+  });
+
+  const data = await response.json();
+
+  // display trolleyId and name
+  document.getElementById('trolleyId').textContent = data.trolleyId;
+  document.getElementById('name').textContent = data.name;
+        })
+        // // Get the placeholder element
+        // const trolleyIdPlaceholder = document.getElementById('trolleyIdPlaceholder');
+        // // Set the trolley ID value
+        // trolleyIdPlaceholder.textContent = '${randomTrolleyId}';
+
+        // // Set the name value
+        // const nameIdPlaceHolder = document.getElementById('name').textContent = data.name;
+        // nameIdPlaceHolder.textContent = '${data.name}';
     </script>
 </body>
 

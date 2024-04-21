@@ -1,18 +1,26 @@
 const express = require('express');
 const bodyParser = require('body-parser'); // Import bodyParser to parse POST request data
 const path = require('path');
-const randomTrolleys = require('./randomTrolley.js');
-const Customer = require('./models/Customer'); // Import the Customer model
-
-const connectDB = require('./db.js')
+const fs = require('fs')
+const crypto = require('crypto');
 const dotenv = require("dotenv")
-dotenv.config({ path: "./.env" });
-const generateFakeData = require ("./Fakedata.js")
-
+dotenv.config({ path: "./.env" })
+const cookieParser = require('cookie-parser');
 const app = express();
+const secretKey = 'your_strong_secret_key'; // Replace with a long, random string for cookie signing
+const cookieExpiry = 1000 * 60 * 60 * 24; 
+app.use(cookieParser(secretKey));
+const randomTrolleys = require('./randomTrolley.js');
+const Customer = require('./models/Customer.js'); // Import the Customer model
+const Product = require('./models/Products.js');
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(__dirname));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+const connectDB = require('./db.js');
+// const generateFakeData = require ("./Fakedata.js")
+
 
 connectDB()
 .then(() => {
@@ -24,13 +32,18 @@ connectDB()
   console.log(`mongoDB connection error: ${err}`);
 })
 
+function generateSessionId() {
+    return crypto.randomBytes(16).toString('hex'); // Generate a random session ID
+  }
+
+
 // Define routes
 app.get('/', (req, res) => {
     // Send the HTML file when the root route is accessed
     res.sendFile(path.join(__dirname, 'GetTrolley.html'));
 });
 
-// // POST request to handle customer data
+// POST request to handle customer data
 app.post('/', async (req, res) => {
     try {
         // Extract customer data from the POST request body
@@ -40,6 +53,11 @@ app.post('/', async (req, res) => {
         if (!name || !email) {
             return res.status(400).json({ error: 'Name and email are required' });
         }
+    const sessionID = generateSessionId();
+
+// Create cookies with email and session ID (signed for security)
+        res.cookie('email', email, { httpOnly: true, signed: true, maxAge: cookieExpiry });
+        res.cookie('sessionId', sessionID, { httpOnly: true, maxAge: cookieExpiry});
 
         // Get a random trolley ID from the randomTrolleys array
         const randomTrolleyIndex = Math.floor(Math.random() * randomTrolleys.length);
@@ -54,12 +72,12 @@ app.post('/', async (req, res) => {
 
         customer.save()
             .then(() => {
-                res.status(201).send(`Trolley with ID ${randomTrolleyId} is assigned to ${req.body.name}`);
+                res.status(201).json(`Trolley with ID ${randomTrolleyId} is assigned to ${req.body.name} and session started`);
             })
             .catch((error) => {
-                res.status(500).send(error.message);
+                res.status(500).json(error.message);
             });
-
+console.log(randomTrolleyId, req.body.email, sessionID)
     } catch (error) {
         // If an error occurs, respond with an error message
         console.error('Error saving customer data:', error);
@@ -67,8 +85,33 @@ app.post('/', async (req, res) => {
     }
 });
 
-app.post('/fetchdata',async(req,res)=>
-    generateFakeData
-)
+app.get('/products', async (req,res) => {
+    // Check for presence of signed cookies
+  const email = req.signedCookies.email;
+  const sessionId = req.cookies.sessionId;
+console.log(email, sessionId);
+  if (!email || !sessionId) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  try {
+    const productLists = await Product.find();
+
+    fs.readFile('public/product.html', 'utf8',(err, data) => {
+        if (err) {
+          console.error('Error reading HTML file:', err);
+          return res.status(500).send('Error');}
+  })
+
+    res.json(productLists); // Send product data as JSON
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+})
+
+// app.post('/fetchdata',async(req,res)=>
+//     generateFakeData
+// )
 
 
