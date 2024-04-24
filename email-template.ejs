@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title> Your Shopping Bill</title>
+</head>
+<style>
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+</style>
+<body>
+
+  <h2>Order Receipt</h2>
+  <%
+  // Track product quantities
+  let quantities = {};
+ 
+  for(let i=0; i<products.length; i++) {
+    
+    // Get current product
+    let product = products[i];
+    
+    // If product exists, increment quantity
+    if(quantities[product.name]) {
+      quantities[product.name]++;
+    } else {
+      // Otherwise set quantity to 1
+      quantities[product.name] = 1; 
+    }
+
+  }
+  let totalPrice = 0;
+
+for(let i=0; i < products.length; i++) {
+  let product = products[i];
+  totalPrice += product.price; 
+}
+  %>
+
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Price</th> 
+      <th>Quantity</th> 
+    </tr>
+
+  <% for (let name in quantities) { %>
+    <tr>
+      <td><%= name %></td>
+      <td><%= products.find(p => p.name === name).price %></td>
+      <td><%= quantities[name] %></td> 
+    </tr>
+
+  <% } %>
+  
+</table>
+
+<p><strong>Total: <%= totalPrice %></strong></p> 
+  
+
+<p>Thank you for shopping!</p>
+</body>
+</html>
